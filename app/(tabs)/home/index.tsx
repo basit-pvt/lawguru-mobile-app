@@ -22,19 +22,25 @@ import { Link } from "expo-router";
 import Title from "@/app/components/ui/Title";
 import ListCard from "@/app/components/cards/ListCard";
 import CarouselCard from "@/app/components/cards/CarouselCard";
-import { fetchArticles, useArticles } from "@/services/articlesService";
-import { useEffect, useState } from "react";
+import { useArticles } from "@/services/articlesService";
 import Loader from "@/app/components/ui/Loader";
 import ErrorMessage from "@/app/components/ui/ErrorMessage";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 export default function Home() {
-  const { data, error, isLoading, isError } = useArticles();
+  const { isAuthenticated, user } = useAuth();
 
-  // useEffect(() => {
-  //   throw new Error("this is an error");
-  // }, []);
+  const preferredCategory =
+    isAuthenticated && user?.preferredCategories?.length
+      ? user.preferredCategories.map((category) => category.id).join(",")
+      : undefined;
+
+  const { data, error, isLoading, isError } = useArticles({
+    category: preferredCategory,
+  });
+
   if (isLoading) return <Loader fullscreen />;
   if (isError) return <ErrorMessage fullscreen />;
 

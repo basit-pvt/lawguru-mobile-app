@@ -82,7 +82,13 @@ async function refreshToken(): Promise<string> {
 apiClient.interceptors.request.use(
   async (config) => {
     // Skip auth for login, register, and refresh endpoints
-    const publicEndpoints = ["/auth/login", "/auth/register", "/auth/refresh"];
+    const publicEndpoints = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/refresh",
+      "/articles",
+      "/category",
+    ];
     const isPublicEndpoint = publicEndpoints.some((endpoint) =>
       config.url?.includes(endpoint)
     );
