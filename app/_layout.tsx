@@ -6,6 +6,8 @@ import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/app/contexts/AuthContext";
 
+import "./widgets";
+
 const queryClient = new QueryClient();
 
 export default function RootLayout() {

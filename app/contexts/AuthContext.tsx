@@ -6,6 +6,10 @@ import {
   logoutApi,
   refreshAccessTokenApi,
 } from "@/services/authService";
+import {
+  saveUserPreferences,
+  UserPreferences,
+} from "@/services/SharedData";
 
 interface AuthContextType {
   user: User | null;
@@ -52,6 +56,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         ["refreshTokenExpires", tokens.refreshTokenExpires],
       ]);
       setUser(userData);
+      await saveUserPreferences({
+        isLoggedIn: true,
+        preferredCategories: userData.preferredCategories?.map((c) => c.id) || [],
+      });
       console.log("Login data saved successfully");
     } catch (error) {
       console.error("Error saving user data:", error);
@@ -69,6 +77,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const updatedUser = { ...user, ...userData };
       setUser(updatedUser);
       await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
+      await saveUserPreferences({
+        isLoggedIn: true,
+        preferredCategories:
+          updatedUser.preferredCategories?.map((c) => c.id) || [],
+      });
       console.log("User data updated successfully");
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -132,6 +145,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         "refreshTokenExpires",
       ]);
 
+      await saveUserPreferences({
+        isLoggedIn: false,
+        preferredCategories: [],
+      });
+
       setUser(null);
       console.log("Local logout completed");
     } catch (error) {
@@ -187,6 +205,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (user && hasRefreshToken && !isRefreshTokenExpired) {
         setUser(user);
+        await saveUserPreferences({
+          isLoggedIn: true,
+          preferredCategories: user.preferredCategories?.map((c) => c.id) || [],
+        });
         console.log("User authenticated");
 
         // If access token is expired but refresh token is valid, refresh it
@@ -204,6 +226,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           "accessTokenExpires",
           "refreshTokenExpires",
         ]);
+        await saveUserPreferences({
+          isLoggedIn: false,
+          preferredCategories: [],
+        });
         setUser(null);
       }
     } catch (error) {
