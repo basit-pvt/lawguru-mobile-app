@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Clock,
   Search,
+  Home as HomeIcon,
 } from "lucide-react-native";
 import { TextInput } from "react-native";
 import SearchBar from "@/app/components/ui/SearchBar";
@@ -29,8 +30,28 @@ import ErrorMessage from "@/app/components/ui/ErrorMessage";
 
 const { width: screenWidth } = Dimensions.get("window");
 
+import { updateWidgetData } from "@/app/services/WidgetDataService";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
+
 export default function Home() {
   const { data, error, isLoading, isError } = useArticles();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (data) {
+      updateWidgetData(data.articles);
+    }
+  }, [data]);
+
+  // Refresh articles when user preferences change
+  useEffect(() => {
+    if (user?.preferredCategories) {
+      // Invalidate and refetch articles when user preferences change
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
+    }
+  }, [user?.preferredCategories, queryClient]);
 
   // useEffect(() => {
   //   throw new Error("this is an error");

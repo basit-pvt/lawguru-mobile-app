@@ -34,6 +34,6 @@
       </intent-filter>
       <meta-data android:name="android.appwidget.provider" android:resource="@xml/widgetprovider_newswidget"/>
     </receiver>
-    <service android:name=".NewsWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS" />
+    
   </application>
 </manifest>

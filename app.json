@@ -34,21 +34,6 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ],
-      [
-        "react-native-android-widget",
-        {
-          "widgets": [
-            {
-              "name": "NewsWidget",
-              "label": "LawGuru News",
-              "description": "Get the latest legal news",
-              "minWidth": "320dp",
-              "minHeight": "120dp",
-              "previewImage": "./assets/images/widget-preview.png"
-            }
-          ]
-        }
       ]
     ],
     "experiments": {

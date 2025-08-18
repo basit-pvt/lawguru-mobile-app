@@ -6,10 +6,7 @@ import {
   logoutApi,
   refreshAccessTokenApi,
 } from "@/services/authService";
-import {
-  saveUserPreferences,
-  UserPreferences,
-} from "@/services/SharedData";
+import { saveUserPreferences, UserPreferences } from "@/services/SharedData";
 
 interface AuthContextType {
   user: User | null;
@@ -58,7 +55,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(userData);
       await saveUserPreferences({
         isLoggedIn: true,
-        preferredCategories: userData.preferredCategories?.map((c) => c.id) || [],
+        preferredCategories:
+          userData.preferredCategories?.map((c) => c.id) || [],
       });
       console.log("Login data saved successfully");
     } catch (error) {
@@ -82,6 +80,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         preferredCategories:
           updatedUser.preferredCategories?.map((c) => c.id) || [],
       });
+
+      // Update widget data when user preferences change
+      try {
+        const { refreshWidgetData } = await import(
+          "@/app/services/WidgetDataService"
+        );
+        await refreshWidgetData();
+        console.log("Widget data refresh triggered after preferences change");
+      } catch (widgetError) {
+        console.log("Widget service not available:", widgetError);
+      }
+
       console.log("User data updated successfully");
     } catch (error) {
       console.error("Error updating user data:", error);

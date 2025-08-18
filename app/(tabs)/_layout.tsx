@@ -1,72 +1,11 @@
 import React from "react";
 import { ErrorBoundaryProps, Tabs } from "expo-router";
-import {
-  Home,
-  Search,
-  Bookmark,
-  User,
-  BookOpen,
-  Newspaper,
-  CircleQuestionMark,
-} from "lucide-react-native";
+import { Home, User, Newspaper, CircleQuestionMark } from "lucide-react-native";
 import Header from "../components/ui/Header";
 import { SafeAreaView, Text, View } from "react-native";
 import ErrorMessage from "../components/ui/ErrorMessage";
 
 const TabLayout = () => {
-  const tabs = [
-    {
-      name: "home/index",
-      title: "Home",
-      icon: <Home color={"black"} />,
-    },
-    {
-      name: "news/index",
-      title: "News",
-      icon: <Newspaper color={"black"} />,
-    },
-    {
-      name: "ask/index",
-      title: "Ask",
-      icon: <CircleQuestionMark color={"black"} />,
-    },
-
-    {
-      name: "profile/index",
-      title: "Profile",
-      icon: <User color={"black"} />,
-    },
-    {
-      name: "cases/index",
-      title: "Cases",
-      icon: <Bookmark color={"black"} />,
-      href: null,
-    },
-    {
-      name: "acts/index",
-      title: "Acts",
-      icon: <BookOpen color={"black"} />,
-      href: null,
-    },
-    {
-      name: "news/[newsId]",
-      title: "News",
-      icon: <BookOpen color={"black"} />,
-      href: null,
-    },
-    {
-      name: "profile/edit",
-      href: null,
-      icon: <User />,
-      title: "Edit Profile",
-    },
-    {
-      name: "profile/questions",
-      href: null,
-      icon: <User />,
-      title: "Questions",
-    },
-  ];
   return (
     <Tabs
       screenOptions={{
@@ -85,22 +24,69 @@ const TabLayout = () => {
         },
         headerTintColor: "#1a1a1a",
       }}
+      initialRouteName="home/index"
     >
-      {tabs.map((tab) => (
-        <Tabs.Screen
-          name={tab.name}
-          options={{
-            header: () => <Header title={tab.title} />,
-            title: tab.title,
-            tabBarIcon: ({ color, focused }) =>
-              React.cloneElement(tab.icon, {
-                color,
-              }),
-            href: tab?.href,
-          }}
-          key={tab.name}
-        />
-      ))}
+      <Tabs.Screen
+        name="home/index"
+        options={{
+          header: () => <Header title="Home" />,
+          title: "Home",
+          tabBarIcon: ({ color, focused }) => <Home color={color} size={24} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="news/index"
+        options={{
+          header: () => <Header title="News" />,
+          title: "News",
+          tabBarIcon: ({ color, focused }) => (
+            <Newspaper color={color} size={24} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="ask/index"
+        options={{
+          header: () => <Header title="Ask" />,
+          title: "Ask",
+          tabBarIcon: ({ color, focused }) => (
+            <CircleQuestionMark color={color} size={24} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          header: () => <Header title="Profile" />,
+          title: "Profile",
+          tabBarIcon: ({ color, focused }) => <User color={color} size={24} />,
+        }}
+      />
+
+      {/* Hide nested routes from tab bar */}
+      <Tabs.Screen
+        name="profile/edit"
+        options={{
+          href: null, // This hides it from the tab bar
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile/questions"
+        options={{
+          href: null, // This hides it from the tab bar
+        }}
+      />
+
+      <Tabs.Screen
+        name="news/[newsId]"
+        options={{
+          href: null, // This hides it from the tab bar
+        }}
+      />
     </Tabs>
   );
 };
